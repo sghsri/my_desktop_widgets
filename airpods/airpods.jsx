@@ -65,18 +65,22 @@ export const render = ({ output, error }) => {
     if (airpod_data.length) {
         return airpod_data.map((ap, index) => {
             let { name, product, address, is_connected, left, right } = ap;
-            console.log("render -> address", address);
             return (
                 <div key={index}>
                     <img className={dImage} src={`${IMAGE_ROOT}/${product}.png`} />
                     <div className={dName} value={address}>
                         {name}
                     </div>
-                    <span className={dText}>{left}</span>
-                    <span className={dText}>{right}</span>
-                    <span className={dText}>{ap.case}</span>
+                    {is_connected && (
+                        <div>
+                            <span className={dText}>{left}</span>
+                            <span className={dText}>{right}</span>
+                            <span className={dText}>{ap.case}</span>
+                        </div>
+                    )}
                     <button
                         className={dButton}
+                        style={is_connected ? { marginLeft: "20%" } : {}}
                         onClick={() => {
                             run(`${BLU_UTIL} ${is_connected ? "--disconnect" : "--connect"} ${address}`).then(output => dispatch({ type: "OUTPUT_UPDATED", output }));
                         }}>
