@@ -8,7 +8,7 @@ export const BLU_UTIL = "/usr/local/bin/blueutil";
 
 export const className = `
     margin: 0px;
-    right: 10px;
+    right: 20px;
     bottom: 10px;
     background: rgba(#000, .2);    
     color: white;
@@ -24,7 +24,7 @@ export const className = `
 
 export const dText = css`
     margin-left: 10px;
-    font-size: 20px;
+    font-size: 18px;
     opacity: .8
     font-weight: 200
 `;
