@@ -22,11 +22,6 @@ export const className = `
     font-weight: 200;
 `;
 
-export const dContainer = css`
-    display: flex;
-    align-items: center;
-`;
-
 export const dText = css`
     margin-left: 10px;
     font-size: 20px;
@@ -38,12 +33,19 @@ export const dName = css`
     opacity: 0.8;
 `;
 
+export const dContainer = css`
+    width: 70%;
+`;
+
 export const dButton = css`
     background: none;
-    border: 0.5px solid;
-    width: 70px;
+    border: 0.25px solid;
+    width: 45%;
     border-radius: 7px;
     color: white;
+    margin-top: 5px;
+    font-weight: 400;
+    margin-left: 8px;
     padding: 5px;
     text-align: center;
     &:active {
@@ -62,35 +64,51 @@ export const dImage = css`
 `;
 
 export const render = ({ output, error }) => {
-    let airpod_data = JSON.parse(output);
-    if (airpod_data.length) {
-        return airpod_data.map((ap, index) => {
-            let { name, product, address, is_connected, left, right } = ap;
-            return (
-                <div key={index} style={!is_connected ? { opacity: "60%" } : {}}>
-                    <img className={dImage} src={`${IMAGE_ROOT}/${product}.png`} />
-                    <div className={dName} value={address}>
-                        {name}
-                    </div>
-                    {is_connected && (
-                        <div>
-                            <span className={dText}>{left}</span>
-                            <span className={dText}>{right}</span>
-                            <span className={dText}>{ap.case}</span>
+    try {
+        if (!output || error) {
+            throw "hello world";
+        }
+        let airpod_data = JSON.parse(output);
+        if (airpod_data.length) {
+            return airpod_data.map((ap, index) => {
+                let { name, product, address, is_connected, left, right } = ap;
+                return (
+                    <div key={index} style={!is_connected ? { opacity: "60%" } : {}}>
+                        <img className={dImage} src={`${IMAGE_ROOT}/${product}.png`} />
+                        <div className={dName} value={address}>
+                            {name}
                         </div>
-                    )}
-                    <button
-                        className={dButton}
-                        style={is_connected ? { marginLeft: "20%" } : {}}
-                        onClick={() => {
-                            run(`${BLU_UTIL} ${is_connected ? "--disconnect" : "--connect"} ${address}`).then(output => dispatch({ type: "OUTPUT_UPDATED", output }));
-                        }}>
-                        {is_connected ? "disconnect" : "connect"}
-                    </button>
-                </div>
-            );
-        });
-    } else {
-        return <div>Error: no airpods paired with</div>;
+                        {is_connected && (
+                            <div>
+                                <span className={dText}>{left}</span>
+                                <span className={dText}>{right}</span>
+                                <span className={dText}>{ap.case}</span>
+                            </div>
+                        )}
+                        <div className={dContainer} style={is_connected ? { marginLeft: "20%" } : {}}>
+                            <button
+                                className={dButton}
+                                style={is_connected ? {} : { marginLeft: "10%" }}
+                                onClick={() => {
+                                    run(`${BLU_UTIL} ${is_connected ? "--disconnect" : "--connect"} ${address}`);
+                                }}>
+                                {is_connected ? "Disconnect" : "Connect"}
+                            </button>
+                            <button
+                                className={dButton}
+                                onClick={() => {
+                                    run(`${BLU_UTIL} -p 0 && sleep 1 && ${BLU_UTIL} -p 1`);
+                                }}>
+                                {"Reset"}
+                            </button>
+                        </div>
+                    </div>
+                );
+            });
+        } else {
+            return <div>Error: no airpods paired with</div>;
+        }
+    } catch (err) {
+        return <div>Error: erorr with code: {JSON.stringify(output)}</div>;
     }
 };
