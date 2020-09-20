@@ -90,6 +90,7 @@ def get_device_objects() -> list:
             "right": f"R {ap.right}%" if ap.right else "",
             "case": f"C {ap.case}%" if ap.case else "",
             "product": f'{ap.product}',
+            "address": f'{ap.address}' if ap.address else "",
             "is_connected": ap.is_connected,
             "name": ap.name,
         })
