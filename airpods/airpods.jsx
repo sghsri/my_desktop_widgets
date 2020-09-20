@@ -47,7 +47,8 @@ export const dButton = css`
     padding: 5px;
     text-align: center;
     &:active {
-        border-color: grey;
+        border-color: #a9a9a9;
+        color: #a9a9a9;
     }
 `;
 
@@ -66,7 +67,7 @@ export const render = ({ output, error }) => {
         return airpod_data.map((ap, index) => {
             let { name, product, address, is_connected, left, right } = ap;
             return (
-                <div key={index}>
+                <div key={index} style={!is_connected ? { opacity: "60%" } : {}}>
                     <img className={dImage} src={`${IMAGE_ROOT}/${product}.png`} />
                     <div className={dName} value={address}>
                         {name}
