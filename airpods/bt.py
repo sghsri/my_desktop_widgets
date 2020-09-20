@@ -5,18 +5,15 @@ import os
 import plistlib
 import sys
 
-ICON_PATH = "airpods/"
-NO_BT_IMG = f'<img class="s-img" src="{ICON_PATH}case.png">'  # Icon for AirPods disconnected
 AIRPD_PRODUCT_INDX = {
     8206: "airpodpro",
     8194: "airpod1",
     8207: "airpod2"
-
 }
 
 
 class AirPod:
-    def __init__(self, address: str, name: str, left: str, right: str, case: str, product_id: int, vendor_id: int, product: str = ""):
+    def __init__(self, address: str, name: str, left: str, right: str, case: str, product_id: int, vendor_id: int,  is_connected: bool, product: str = "",):
         self.address = address
         self.name = name
         self.left = left
@@ -25,9 +22,11 @@ class AirPod:
         self.product_id = product_id
         self.vendor_id = vendor_id
         self.product = AIRPD_PRODUCT_INDX.get(self.product_id) if self.product_id in AIRPD_PRODUCT_INDX else "n/a"
-
+        self.is_connected = is_connected
 
 # for debugging purpose: defaults read /Library/Preferences/com.apple.Bluetooth
+
+
 def airpod_battery_status(device_id: str) -> tuple:
     """
     Get device status with a given address (MAC)
@@ -54,7 +53,7 @@ def airpod_battery_status(device_id: str) -> tuple:
     return ret
 
 
-def airpods_connected() -> list:
+def get_airpods() -> list:
     """
     Get list of connected AirPods
 
@@ -66,16 +65,16 @@ def airpods_connected() -> list:
     for v in jsn:
         name: str = v.get('name')
         address: str = v.get('address')
-        if v.get('connected'):
-            left, right, case, product_id, vendor_id = airpod_battery_status(address)
-            ap = AirPod(address, name, left, right, case, product_id, vendor_id)
-            # 76: Apple; 8206: AirPods Pro; 8194: AirPods 1; 8207: AirPods 2
-            if ap.vendor_id == 76 and ap.product_id in AIRPD_PRODUCT_INDX:
-                connected_aps.append(ap)
+        # if v.get('connected'):
+        left, right, case, product_id, vendor_id = airpod_battery_status(address)
+        ap = AirPod(address, name, left, right, case, product_id, vendor_id, v.get('connected'))
+        # 76: Apple; 8206: AirPods Pro; 8194: AirPods 1; 8207: AirPods 2
+        if ap.vendor_id == 76 and ap.product_id in AIRPD_PRODUCT_INDX:
+            connected_aps.append(ap)
     return connected_aps
 
 
-def get_device_html() -> list:
+def get_device_objects() -> list:
     """
     Generates list of devices incl name and battery status of Airpods
 
@@ -83,30 +82,23 @@ def get_device_html() -> list:
         list: List of HTML strings
 
     """
-    aps: list = airpods_connected()
+    aps: list = get_airpods()
     devices = list()
     for ap in aps:
-        left: str = f"L {ap.left}%" if ap.left else ""
-        right: str = f"R {ap.right}%" if ap.right else ""
-        case: str = f"C {ap.case}%" if ap.case else ""
-        product: str = f'{ap.product}'
-        name: str = ap.name
-        d_str = name
-        if left is not "" or right is not "":
-            d_str = f"""
-            <img src="{ICON_PATH}{product}.png">
-            <div class="s-name">{name}</div><span class="s-txt">{left} {right} {case}</span>
-            """
-        devices.append(d_str)
+        devices.append({
+            "left": f"L {ap.left}%" if ap.left else "",
+            "right": f"R {ap.right}%" if ap.right else "",
+            "case": f"C {ap.case}%" if ap.case else "",
+            "product": f'{ap.product}',
+            "is_connected": ap.is_connected,
+            "name": ap.name,
+        })
     return devices
 
 
 def main():
-    connected_list = get_device_html()
-    connected = ''
-    if len(connected_list) > 0:
-        connected = "<br>".join(connected_list)
-    sys.stdout.write(connected)
+    connected_list = get_device_objects()
+    sys.stdout.write(json.dumps(connected_list))
 
 
 if __name__ == "__main__":
