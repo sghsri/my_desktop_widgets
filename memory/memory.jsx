@@ -8,6 +8,7 @@ export const className = `
     top: 40px;
     right: 10px;
     color: #fff;
+    opacity: 0.8;
     font-family: Helvetica Neue;
 `;
 
@@ -19,8 +20,9 @@ export const table = css`
         content: "memory";
         position: absolute;
         right: 0;
-        top: -17px;
-        font-size: 12px;
+        top: -24px;
+        font-size: 15px;
+        font-weight: 200;
     }
 `;
 
@@ -71,7 +73,7 @@ const cleanMemoryData = output => {
         let pid = parseInt(found[1]);
         let name = found.length > 3 ? `${found[2]} ${found[3]}` : found[2];
 
-        let process = data_objects.find(process => process.name.split === name);
+        let process = data_objects.find(process => process.name === name);
         if (process) {
             process.memory += memory;
         } else {
@@ -85,16 +87,23 @@ const cleanMemoryData = output => {
     return data_objects;
 };
 
+const prettyPrintMemoryData = mem => {
+    let unit = mem > 1024 ? "GB" : "MB";
+    let value = mem > 1024 ? (mem / 1024).toFixed(2) : mem;
+    return `${value} ${unit}`;
+};
+
 export const render = ({ output, error }) => {
     let processes = cleanMemoryData(output);
     processes = processes.slice(0, 3);
+    console.log("render -> processes", processes);
     return (
         <table className={table}>
             <tr>
                 {processes.map((proc, index) => {
                     return (
                         <td className={tableElement}>
-                            <div className={wrapper}>{proc.memory} MB</div>
+                            <div className={wrapper}>{prettyPrintMemoryData(proc.memory)}</div>
                             <div className={info}>{proc.name}</div>
                         </td>
                     );
