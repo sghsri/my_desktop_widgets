@@ -5,8 +5,8 @@ export const command = 'ps axo "rss,pid,ucomm" | sort -nr';
 export const refreshFrequency = 5000;
 
 export const className = `
-    top: 40px;
-    right: 10px;
+    left: 35px;
+    bottom: 30px;
     color: #fff;
     opacity: 0.8;
     font-family: Helvetica Neue;
@@ -19,7 +19,7 @@ export const table = css`
     &:before {
         content: "memory";
         position: absolute;
-        right: 0;
+        left: 0;
         top: -24px;
         font-size: 15px;
         font-weight: 200;
@@ -35,7 +35,7 @@ export const tableElement = css`
     text-align: center;
     max-width: 120px;
     overflow: hidden;
-    text-shadow: 0 0 1px rgba(#000, 0.5);
+    text-shadow: 0 0 1px hsla(0, 0%, 0%, 0.5);
 `;
 
 export const wrapper = css`
@@ -44,11 +44,11 @@ export const wrapper = css`
 `;
 
 export const colOne = css`
-    background: rgba(#000, 0.2);
+    background: hsla(0, 0%, 0%, 0.2);
 `;
 
 export const colTwo = css`
-    background: rgba(#000, 0.1);
+    background: hsla(0, 0%, 0%, 0.1);
 `;
 
 export const info = css`
