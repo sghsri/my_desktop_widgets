@@ -15,15 +15,6 @@ export const className = `
 export const table = css`
     border-collapse: collapse;
     table-layout: fixed;
-
-    &:before {
-        content: "memory";
-        position: absolute;
-        left: 0;
-        top: -24px;
-        font-size: 15px;
-        font-weight: 200;
-    }
 `;
 
 export const tableElement = css`
@@ -36,6 +27,14 @@ export const tableElement = css`
     max-width: 120px;
     overflow: hidden;
     text-shadow: 0 0 1px hsla(0, 0%, 0%, 0.5);
+`;
+
+export const tableTitle = css`
+    position: absolute;
+    left: 0;
+    top: -33px;
+    font-size: 24px;
+    font-weight: 200;
 `;
 
 export const wrapper = css`
@@ -67,6 +66,7 @@ const cleanMemoryData = output => {
         .filter(data => data)
         .map(data => data.trim());
     let data_objects = [];
+    let total_mem = 0;
     for (let data of data_list) {
         let found = data.split(/[ ,]+/);
         let memory = parseInt(found[0] / 1024);
@@ -76,7 +76,11 @@ const cleanMemoryData = output => {
         let process = data_objects.find(process => process.name === name);
         if (process) {
             process.memory += memory;
+            total_mem += memory;
         } else {
+            if (!isNaN(total_mem + memory)) {
+                total_mem += memory;
+            }
             data_objects.push({
                 name,
                 memory,
@@ -84,31 +88,37 @@ const cleanMemoryData = output => {
             });
         }
     }
-    return data_objects;
+    console.log("total_mem", total_mem);
+    return { total_mem, data_objects };
 };
 
 const prettyPrintMemoryData = mem => {
-    let unit = mem > 1024 ? "GB" : "MB";
-    let value = mem > 1024 ? (mem / 1024).toFixed(2) : mem;
+    // console.log("MSMSMMSMS", mem);
+    let unit = mem > 1000 ? "GB" : "MB";
+    let value = mem > 1000 ? (mem / 1000).toFixed(2) : mem;
     return `${value} ${unit}`;
 };
 
 export const render = ({ output, error }) => {
-    let processes = cleanMemoryData(output);
+    let { data_objects: processes, total_mem } = cleanMemoryData(output);
     processes = processes.slice(0, 3);
-    console.log("render -> processes", processes);
     return (
-        <table className={table}>
-            <tr>
-                {processes.map((proc, index) => {
-                    return (
-                        <td className={tableElement}>
-                            <div className={wrapper}>{prettyPrintMemoryData(proc.memory)}</div>
-                            <div className={info}>{proc.name}</div>
-                        </td>
-                    );
-                })}
-            </tr>
-        </table>
+        <div>
+            <div className={tableTitle}>
+                malloc: <span style={{ fontSize: "24px", fontWeight: "300" }}>{prettyPrintMemoryData(total_mem)}</span>
+            </div>
+            <table className={table}>
+                <tr>
+                    {processes.map((proc, index) => {
+                        return (
+                            <td className={tableElement}>
+                                <div className={wrapper}>{prettyPrintMemoryData(proc.memory)}</div>
+                                <div className={info}>{proc.name}</div>
+                            </td>
+                        );
+                    })}
+                </tr>
+            </table>
+        </div>
     );
 };
