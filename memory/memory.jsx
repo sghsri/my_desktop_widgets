@@ -19,7 +19,7 @@ export const table = css`
 
 export const tableElement = css`
     border: 1px solid #fff;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 100;
     width: 120px;
     padding: 5px;
@@ -53,7 +53,7 @@ export const colTwo = css`
 export const info = css`
     padding: 0;
     margin: 0;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: normal;
     max-width: 100%;
     color: #ddd;
@@ -101,7 +101,7 @@ const prettyPrintMemoryData = mem => {
 
 export const render = ({ output, error }) => {
     let { data_objects: processes, total_mem } = cleanMemoryData(output);
-    processes = processes.slice(0, 3);
+    processes = processes.slice(0, 4);
     return (
         <div>
             <div className={tableTitle}>
