@@ -66,6 +66,8 @@ style: (->
   return """
     background: #{stylingOptions.background}
     color: #FFFFFF
+    border: 0.5px solid #fff;
+    border-radius: 20px;
     font-family: Helvetica Neue
     left: 2%
     top: #{top}

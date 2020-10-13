@@ -8,7 +8,10 @@ export const className = `
     left: 35px;
     bottom: 30px;
     color: #fff;
+    background: rgba(1,1,1,0.2);
     opacity: 0.8;
+    border: 0.5px solid #fff;
+    border-radius: 20px;
     font-family: Helvetica Neue;
 `;
 
@@ -18,7 +21,7 @@ export const table = css`
 `;
 
 export const tableElement = css`
-    border: 1px solid #fff;
+    border-radius: 20px;
     font-size: 28px;
     font-weight: 100;
     width: 120px;
@@ -31,8 +34,14 @@ export const tableElement = css`
 
 export const tableTitle = css`
     position: absolute;
-    left: 0;
-    top: -33px;
+    left: 10px;
+    top: -42px;
+    background: rgba(1,1,1,0.2);
+    border-bottom: none;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 10px;
+    padding: 5px 5px;
     font-size: 24px;
     font-weight: 200;
 `;

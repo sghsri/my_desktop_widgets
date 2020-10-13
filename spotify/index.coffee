@@ -21,6 +21,12 @@ style: """
   top: 10px
   right: 10px
   color: #fff
+  opacity: .8;
+  padding: 10px;
+  border: 0.5px solid #fff;
+  border-radius: 20px;
+  background: rgba(1,1,1,0.2)
+
 
   .output
     font-family: Helvetica Neue

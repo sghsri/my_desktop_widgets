@@ -10,7 +10,8 @@ export const className = `
     margin: 0px;
     right: 20px;
     bottom: 10px;
-    background: rgba(#000, .2);    
+    background: rgba(1,1,1,0.2); !important;
+    border-radius: 10px;    
     color: white;
     padding: 10px;
     text-align: center;
@@ -25,12 +26,12 @@ export const className = `
 export const dText = css`
     margin-left: 10px;
     font-size: 18px;
-    opacity: .8
+    opacity: 1;
     font-weight: 200
 `;
 
 export const dName = css`
-    opacity: 0.8;
+    opacity: 1;
 `;
 
 export const dContainer = css`
@@ -59,7 +60,7 @@ export const dImage = css`
     width: 48px;
     margin-top: 8px;
     filter: grayscale(100%) invert(100%) contrast(500%);
-    opacity: 0.7;
+    opacity: 1;
     float: left;
 `;
 
@@ -73,7 +74,7 @@ export const render = ({ output, error }) => {
             return airpod_data.map((ap, index) => {
                 let { name, product, address, is_connected, left, right } = ap;
                 return (
-                    <div key={index} style={!is_connected ? { opacity: "60%" } : {}}>
+                    <div key={index} style={!is_connected ? { opacity: "65%" } : {}}>
                         <img className={dImage} src={`${IMAGE_ROOT}/${product}.png`} />
                         <div className={dName} value={address}>
                             {name}
