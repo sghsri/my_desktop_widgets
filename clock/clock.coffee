@@ -69,7 +69,7 @@ style: (->
     border: 0.5px solid #fff;
     border-radius: 20px;
     font-family: Helvetica Neue
-    left: 2%
+    left: 5%
     top: #{top}
     bottom: #{bottom}
     transform: #{transform}
